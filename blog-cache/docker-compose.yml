@@ -1,0 +1,14 @@
+services:
+  memcached:
+    image: memcached:1.6-alpine
+    command: ["-m", "64"]
+    ports: ["11211:11211"]
+
+  app:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      MEMCACHED_HOST: memcached
+      DB_PATH: /data/blog.db
+    volumes: ["./data:/data"]      # файл БД переживает пересборку контейнера
+    depends_on: [memcached]
